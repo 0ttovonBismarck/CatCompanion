@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cassys Pixel Cat Companion</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --day-top: #4f7fd0;
+  --day-bottom: #68a3f2;
+
+  --night-top: #0f1630;
+  --night-bottom: #151d3a;
+
+  --day-text: #04121f;
+  --night-text: #e9f0ff;
+}
+
+/* ===== Global ===== */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Quicksand", sans-serif;
+  background: linear-gradient(180deg, var(--day-top), var(--day-bottom));
+  transition: background 0.8s ease;
+}
+
+.wrapper {
+  position: relative;
+  text-align: center;
+  z-index: 10;
+}
+
+/* ===== Mondkreis mit Emoji ===== */
+
+.moonring {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%) rotate(0deg);
+  animation: moon-spin 55s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes moon-spin {
+  0%   { transform: translate(-50%, -58%) rotate(0deg); }
+  100% { transform: translate(-50%, -58%) rotate(360deg); }
+}
+
+.moon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  font-size: 22px;
+  filter: drop-shadow(0 0 3px rgba(0,0,0,0.5));
+  opacity: 0.8;
+}
+
+/* 8 Phasen: 🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔 (in Reihenfolge) */
+.moon:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg)   translate(140px); }
+.moon:nth-child(2) { transform: translate(-50%, -50%) rotate(45deg)  translate(140px); }
+.moon:nth-child(3) { transform: translate(-50%, -50%) rotate(90deg)  translate(140px); }
+.moon:nth-child(4) { transform: translate(-50%, -50%) rotate(135deg) translate(140px); }
+.moon:nth-child(5) { transform: translate(-50%, -50%) rotate(180deg) translate(140px); }
+.moon:nth-child(6) { transform: translate(-50%, -50%) rotate(225deg) translate(140px); }
+.moon:nth-child(7) { transform: translate(-50%, -50%) rotate(270deg) translate(140px); }
+.moon:nth-child(8) { transform: translate(-50%, -50%) rotate(315deg) translate(140px); }
+
+/* ===== Katze ===== */
+
+#cat {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+  cursor: pointer;
+  transform-origin: center bottom;
+  animation: breathe 3s ease-in-out infinite;
+  z-index: 20;
+}
+
+#cat-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  transition: filter 0.4s ease;
+}
+
+.cat-shadow {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 6px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: -1;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-4px) scale(1); }
+}
+
+.sparkle {
+  position: absolute;
+  top: 8px;
+  right: -8px;
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sparkle::before,
+.sparkle::after {
+  content: "";
+  position: absolute;
+  background: white;
+}
+
+.sparkle::before {
+  width: 12px; height: 2px;
+  top: 5px; left: 0;
+}
+.sparkle::after {
+  width: 2px; height: 12px;
+  top: 0; left: 5px;
+}
+
+@keyframes sparkle-pop {
+  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
+  10%  { opacity: 1; }
+  70%  { opacity: 1; transform: translateY(-8px) scale(1); }
+  100% { opacity: 0; transform: translateY(-14px) scale(0.3); }
+}
+
+/* Idle Animations */
+@keyframes idle-hop {
+  0% { transform: translateY(0); }
+  30%{ transform: translateY(-14px); }
+  60%{ transform: translateY(4px); }
+  100%{ transform: translateY(0); }
+}
+
+@keyframes idle-wiggle {
+  0%,100%{ transform: rotate(0deg); }
+  25%{ transform: rotate(-4deg); }
+  50%{ transform: rotate(4deg); }
+  75%{ transform: rotate(-3deg); }
+}
+
+@keyframes idle-tilt {
+  0%{ transform: rotate(0deg); }
+  50%{ transform: rotate(-8deg); }
+  100%{ transform: rotate(0deg); }
+}
+
+/* Click Animations */
+@keyframes click-bounce {
+  0%{ transform: translateY(0) scale(1); }
+  30%{ transform: translateY(-16px) scale(1.05); }
+  60%{ transform: translateY(4px) scale(0.95); }
+  100%{ transform: translateY(0) scale(1); }
+}
+
+@keyframes click-shake {
+  0%,100%{ transform: translateX(0) scale(1); }
+  20% { transform: translateX(-6px) scale(1); }
+  40% { transform: translateX(6px)  scale(1); }
+  60% { transform: translateX(-5px) scale(1); }
+  80% { transform: translateX(5px)  scale(1); }
+}
+
+@keyframes click-pop {
+  0%{ transform: scale(1); }
+  40%{ transform: scale(1.12); }
+  100%{ transform: scale(1); }
+}
+
+.idle-hop     { animation: idle-hop 0.65s ease-out 1; }
+.idle-wiggle  { animation: idle-wiggle 0.55s ease-out 1; }
+.idle-tilt    { animation: idle-tilt 0.55s ease-out 1; }
+
+.sparkle-on   { animation: sparkle-pop 0.7s ease-out 1; }
+
+.click-bounce { animation: click-bounce 0.45s ease-out 1 !important; }
+.click-shake  { animation: click-shake 0.4s ease-out 1 !important; }
+.click-pop    { animation: click-pop 0.35s ease-out 1 !important; }
+
+/* ===== Message ===== */
+
+#message {
+  margin-top: 32px;
+  max-width: 90vw;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--day-text);
+  transition: color 0.4s ease, transform 0.4s ease;
+  text-shadow: 0.5px 0.5px 0 rgba(0,0,0,0.25);
+}
+
+.cassy-name {
+  display: inline-block;
+}
+
+.cassy-anim {
+  animation: cassy-pulse 0.5s ease-out 1;
+}
+
+@keyframes cassy-pulse {
+  0%{ transform: scale(1); }
+  50%{ transform: scale(1.07); }
+  100%{ transform: scale(1); }
+}
+
+/* Existential wiggle (nur Text) */
+.existential-message {
+  animation: existential-wiggle 1.4s ease-in-out infinite;
+}
+
+@keyframes existential-wiggle {
+  0%,100%{ transform: translateX(0); }
+  50%{ transform: translateX(2px); }
+}
+
+/* ===== Night Mode ===== */
+
+body.night {
+  background: linear-gradient(180deg, var(--night-top), var(--night-bottom));
+}
+
+body.night #message {
+  color: var(--night-text);
+}
+
+body.night .moon {
+  opacity: 0.95;
+}
+
+/* Existential background overlay */
+body.existential {
+  background: linear-gradient(180deg, #141425, #232348) !important;
+}
+
+body.existential #cat-img {
+  filter: hue-rotate(15deg) brightness(0.85);
+}
+
+/* ===== Toggle Button ===== */
+
+.toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ffffffaa;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+body.night .toggle {
+  background: #00000055;
+  color: #f0f3ff;
+}
+</style>
+</head>
+<body>
+
+<div class="toggle" id="toggle-button">Tagmodus</div>
+
+<div class="wrapper">
+  <!-- Mondkreis -->
+  <div class="moonring">
+    <div class="moon">🌕</div>
+    <div class="moon">🌖</div>
+    <div class="moon">🌗</div>
+    <div class="moon">🌘</div>
+    <div class="moon">🌑</div>
+    <div class="moon">🌒</div>
+    <div class="moon">🌓</div>
+    <div class="moon">🌔</div>
+  </div>
+
+  <!-- Katze -->
+  <div id="cat">
+    <img id="cat-img" src="cat.png" alt="Pixel Cat">
+    <div class="cat-shadow"></div>
+    <div class="sparkle"></div>
+  </div>
+
+  <!-- Text -->
+  <div id="message"></div>
+</div>
+
+<script>
+/* ===== Sprüche mit Nutzungszähler ===== */
+
+const motivating = [
+  { text: "Das <span class='cassy-name'>C</span> in <span class='cassy-name'>Cassy</span> steht für competent!", uses: 0 },
+  { text: "Manchmal ist Atmen produktiv genug.", uses: 0 },
+  { text: "<span class='cassy-name'>Cassy</span>, du bist stärker, als du glaubst.", uses: 0 },
+  { text: "Du musst nicht perfekt sein. Nur echt sein, <span class='cassy-name'>Cassy</span>.", uses: 0 },
+  { text: "<span class='cassy-name'>Cassy</span>, du machst das wirklich gut – auch, wenn du es nicht so fühlst.", uses: 0 },
+  { text: "Ich glaub an dich. Und ich bin eine Katze – das ist erstaunlich viel Support.", uses: 0 },
+  { text: "Kleine Schritte sind auch Fortschritt. Besonders in Kuschelsocken.", uses: 0 },
+  { text: "Chaos kann cute sein. Beweis: <span class='cassy-name'>du</span>.", uses: 0 },
+  { text: "Du musst heute nicht alles schaffen. Du darfst einfach da sein, <span class='cassy-name'>Cassy</span>.", uses: 0 },
+  { text: "Stolpern ist okay. Weitergehen auch. Pausieren sowieso.", uses: 0 },
+  { text: "Niemand hat sein Leben im Griff. Du bist in guter Gesellschaft.", uses: 0 },
+  { text: "Langsam sein ist erlaubt, <span class='cassy-name'>Cassy</span>.", uses: 0 },
+  { text: "Heute überlebt? Reicht.", uses: 0 },
+  { text: "Du bist keine Maschine. Zum Glück.", uses: 0 },
+  { text: "Wenn alles viel ist: Einmal tief einatmen. Reicht als To-Do.", uses: 0 },
+  { text: "<span class='cassy-name'>Cassy</span>, du brauchst keine Erlaubnis, müde zu sein.", uses: 0 },
+  { text: "Du bist nicht faul, du bist im Energiesparmodus.", uses: 0 },
+  { text: "Das hier ist schwer. Du bist trotzdem da. Das ist beeindruckend.", uses: 0 },
+];
+
+const funfacts = [
+  { text: "Fun Fact: Hausstaub besteht zu etwa 75% aus Hautschuppen. Fluffig.", uses: 0 },
+  { text: "Schnabeltiere legen Eier und sind giftig. Overachiever.", uses: 0 },
+  { text: "Kraken haben drei Herzen. Mehr als manch Ex.", uses: 0 },
+  { text: "Otter halten Händchen beim Schlafen, damit sie nicht wegdriften.", uses: 0 },
+  { text: "Kühe haben beste Freundinnen und werden traurig, wenn man sie trennt.", uses: 0 },
+  { text: "Wombats machen würfelförmige Köttel. Praktisch stapelbar.", uses: 0 },
+  { text: "Schmetterlinge schmecken mit ihren Füßen.", uses: 0 },
+  { text: "Pinguine schenken Kieselsteine als Liebesbeweis.", uses: 0 },
+  { text: "Fun Fact: Manche Schildkröten atmen teilweise durch den Po. Leben auf schwierig.", uses: 0 },
+  { text: "Axolotl können Gliedmaßen nachwachsen lassen. Respawn-Feature: aktiviert.", uses: 0 },
+  { text: "Krähen können sich Gesichter merken – und sie weitererzählen.", uses: 0 },
+  { text: "Bienen können sich gegenseitig Orte vortanzen. Sehr advanced Google Maps.", uses: 0 },
+  { text: "Fun Fact: Seeotter haben eine Lieblingsmuschel, die sie immer bei sich tragen.", uses: 0 },
+  { text: "Erdnüsse sind eigentlich Hülsenfrüchte. Also irgendwie Bohnen.", uses: 0 },
+  { text: "Fun Fact: In deinem Körper gibt es mehr Bakterien als Menschen auf der Erde.", uses: 0 },
+];
+
+const existential = [
+  { text: "Letztlich macht nichts einen Unterschied. Aber du siehst dabei süß aus! :)", uses: 0 },
+  { text: "Wir schweben durchs All – aber <span class='cassy-name'>Cassy</span>, du machst das ästhetisch.", uses: 0 },
+  { text: "Wenn du alles gegen die Wand fährst, dann bitte in Pastellfarben.", uses: 0 },
+  { text: "Das Leben ist sinnlos. Snacks nicht.", uses: 0 },
+  { text: "In ein paar Milliarden Jahren ist die Sonne weg. Heute musst du nicht perfekt sein.", uses: 0 },
+  { text: "Nichts ist für immer. Außer vielleicht deiner Müdigkeit.", uses: 0 },
+  { text: "Du bist Sternenstaub mit WLAN-Zugang. Das ist schon wild.", uses: 0 },
+  { text: "Am Ende erinnert sich niemand an jede To-Do-Liste. Also atme.", uses: 0 },
+];
+
+/* ===== Farbpaletten für Text ===== */
+
+const dayColors = [
+  "#1a2540", "#172338", "#f26a8d",
+  "#f97373", "#f28705", "#0f3c4c"
+];
+
+const nightColors = [
+  "#e9f0ff", "#f4e9ff", "#ffd6e8",
+  "#ffe9c7", "#dce8ff", "#f7f2ff"
+];
+
+function palette() {
+  return document.body.classList.contains("night") ? nightColors : dayColors;
+}
+
+function randomColor() {
+  const p = palette();
+  return p[Math.floor(Math.random() * p.length)];
+}
+
+/* ===== Weighted Pick by uses ===== */
+
+function weightedPick(list) {
+  let total = 0;
+  const weights = list.map(m => {
+    const w = 1 / (1 + m.uses); // öfter genutzt = kleiner
+    total += w;
+    return w;
+  });
+
+  let r = Math.random() * total;
+  for (let i = 0; i < list.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return list[i];
+  }
+  return list[list.length - 1];
+}
+
+/* Kategorie-Gewichtung: 70% motivierend, 25% Fun, 5% existential */
+
+function pickMessageObject() {
+  const roll = Math.random();
+  let pool;
+  let type;
+  if (roll < 0.70) { pool = motivating; type = "motivating"; }
+  else if (roll < 0.95) { pool = funfacts; type = "fun"; }
+  else { pool = existential; type = "existential"; }
+
+  const msgObj = weightedPick(pool);
+  msgObj.uses += 1;
+  return { ...msgObj, type };
+}
+
+/* ===== DOM-Elemente ===== */
+
+const cat = document.getElementById("cat");
+const msg = document.getElementById("message");
+const sparkle = document.querySelector(".sparkle");
+const toggle = document.getElementById("toggle-button");
+
+let existentialTimeout = null;
+
+function animateCassyNames() {
+  const names = msg.querySelectorAll(".cassy-name");
+  names.forEach(el => {
+    el.classList.remove("cassy-anim");
+    void el.offsetWidth;
+    el.classList.add("cassy-anim");
+  });
+}
+
+function showMessage() {
+  const { text, type } = pickMessageObject();
+
+  // existential mode
+  if (type === "existential") {
+    document.body.classList.add("existential");
+    msg.classList.add("existential-message");
+    clearTimeout(existentialTimeout);
+    existentialTimeout = setTimeout(() => {
+      document.body.classList.remove("existential");
+      msg.classList.remove("existential-message");
+    }, 4000);
+  } else {
+    document.body.classList.remove("existential");
+    msg.classList.remove("existential-message");
+  }
+
+  msg.innerHTML = text;
+  msg.style.color = randomColor();
+  animateCassyNames();
+}
+
+/* Initial message */
+showMessage();
+
+/* ===== Idle Animations ===== */
+
+const idleClasses = ["idle-hop", "idle-wiggle", "idle-tilt"];
+
+function triggerIdle() {
+  const cls = idleClasses[Math.floor(Math.random() * idleClasses.length)];
+  cat.classList.add(cls);
+
+  if (Math.random() < 0.4) {
+    sparkle.classList.add("sparkle-on");
+    setTimeout(() => sparkle.classList.remove("sparkle-on"), 700);
+  }
+
+  setTimeout(() => {
+    cat.classList.remove(cls);
+    scheduleIdle();
+  }, 700);
+}
+
+function scheduleIdle() {
+  const delay = 2000 + Math.random() * 2500;
+  setTimeout(triggerIdle, delay);
+}
+
+scheduleIdle();
+
+/* ===== Click Animations ===== */
+
+const clickClasses = ["click-bounce", "click-shake", "click-pop"];
+
+cat.addEventListener("click", () => {
+  const cls = clickClasses[Math.floor(Math.random() * clickClasses.length)];
+  cat.classList.add(cls);
+  setTimeout(() => cat.classList.remove(cls), 500);
+
+  showMessage();
+});
+
+/* ===== Night Mode (Standard: an) ===== */
+
+document.body.classList.add("night"); // Start im Nachtmodus
+
+toggle.addEventListener("click", () => {
+  const nightOn = document.body.classList.toggle("night");
+  toggle.textContent = nightOn ? "Tagmodus" : "Nachtmodus";
+  // Schriftfarbe an Palette anpassen
+  msg.style.color = randomColor();
+});
+</script>
+</body>
+</html>
