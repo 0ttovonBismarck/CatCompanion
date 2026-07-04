@@ -604,12 +604,7 @@ toggle.addEventListener("click", () => {
 function openGandalfMode() {
   gandalfOverlay.classList.add("active");
 
-  /*
-    Standard: Video verwenden.
-    Wenn du lieber direkt ein GIF verwenden willst:
-    - die nächsten 5 Zeilen mit gandalfVideo auskommentieren
-    - und stattdessen gandalfGif.classList.add("active"); nutzen
-  */
+  
   gandalfGif.classList.remove("active");
   gandalfVideo.classList.add("active");
   gandalfVideo.currentTime = 0;
@@ -630,11 +625,7 @@ function openGandalfMode() {
       });
   }
 
-  if (audioPromise !== undefined) {
-    audioPromise.catch(() => {
-      gandalfNote.style.display = "block";
-      gandalfNote.textContent = "Musik konnte nicht gestartet werden. Prüfe, ob gandalf-music.mp3 im Ordner liegt.";
-    });
+
   }
 }
 
@@ -647,7 +638,7 @@ function closeGandalfMode() {
   gandalfVideo.classList.remove("active");
   gandalfGif.classList.remove("active");
   gandalfNote.style.display = "none";
-  gandalfNote.textContent = "Lege später gandalf-mode.mp4/gif und gandalf-music.mp3 in den Projektordner.";
+  
 }
 
 gandalfButton.addEventListener("click", openGandalfMode);
