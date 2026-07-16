@@ -552,7 +552,7 @@ function randomColor() {
 function weightedPick(list) {
   let total = 0;
   const weights = list.map(m => {
-    const w = 1 / (1 + m.uses);
+    const w = 1 / Math.pow(1 + m.uses, 4);
     total += w;
     return w;
   });
